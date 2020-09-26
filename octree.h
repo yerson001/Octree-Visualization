@@ -144,16 +144,18 @@ public:
         cout<<"punto : ("<<pt->x<<", "<<pt->y<<", "<<pt->z<<" )"<<endl;
     } 
     
-     void eliminar(Point *pt) {
+    void eliminar(Point *pt) {
         Octree *pOT = nullptr;
-        if(find(pt,&pOT)) {
-          //PriP(pt);
-          //pt = nullptr;
-          /*
-            auto it = pt->data.begin();
-            while(*it != point) ++it;
-                pt->data.erase(it);*/  
-        }else{
+        if(find(pt,&pOT)) { 
+         cout<<">>>>>>>>>> lo encontramos para eliminar"<<endl;
+        for(int i = 0;i<int(pOT->data.size());i++){
+            if( pOT->data[i]->x == pt->x and pOT->data[i]->y == pt->y and pOT->data[i]->z == pt->z){
+                cout<<"( "<<pOT->data[i]->x<<", "<<pOT->data[i]->y<<", "<<pOT->data[i]->z<<")"<<endl;
+                pOT->data[i] = new Point();// lo convertimos en un punto vacio
+            }
+        }
+         
+        }else {
           cout<<"no lo encontro para eliminar"<<endl;
         }
     }
