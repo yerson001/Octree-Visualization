@@ -9,4 +9,3 @@
 3 En el mein ubicar la ruta "....../archivo/bender.txt"
 ~~~
 4 Compilar con Qt
-~~~
