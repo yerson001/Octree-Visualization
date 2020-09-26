@@ -137,14 +137,14 @@ public:
         return true;
     }
 
-    void printQ(){
+    void printOT(){
         qDebug() << data.size() << " tamanio";
     }
      void PriP(Point *pt){
         cout<<"punto : ("<<pt->x<<", "<<pt->y<<", "<<pt->z<<" )"<<endl;
     } 
     
-     void delete(Point *pt) {
+     void eliminar(Point *pt) {
         Octree *pOT = nullptr;
         if(find(pt,&pOT)) {
           //PriP(pt);
