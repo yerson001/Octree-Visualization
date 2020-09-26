@@ -1,7 +1,8 @@
 #  OcTree-Visualization
 
 ![img](https://github.com/yerson001/Octree-Visualization/blob/master/Img.PNG)
-
-##Desgarge el zip
-##buscar el archivo Octree.pro'
-##Compilar con Qt
+~~~
+1 Desgarge el zip
+2 buscar el archivo Octree.pro'
+3 Compilar con Qt
+~~~
