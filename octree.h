@@ -140,6 +140,23 @@ public:
     void printQ(){
         qDebug() << data.size() << " tamanio";
     }
+     void PriP(Point *pt){
+        cout<<"punto : ("<<pt->x<<", "<<pt->y<<", "<<pt->z<<" )"<<endl;
+    } 
+    
+     void delete(Point *pt) {
+        Octree *pOT = nullptr;
+        if(find(pt,&pOT)) {
+          //PriP(pt);
+          //pt = nullptr;
+          /*
+            auto it = pt->data.begin();
+            while(*it != point) ++it;
+                pt->data.erase(it);*/  
+        }else{
+          cout<<"no lo encontro para eliminar"<<endl;
+        }
+    }
 
     ~OctTree(){
         for(int i = 0;i<data.size();i++)
