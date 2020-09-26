@@ -1,7 +1,8 @@
-#  OcTree-Visualization
+#         OcTree-Visualization
 
 ![img](https://github.com/yerson001/Octree-Visualization/blob/master/Img.PNG)
 
+#        Pasos para ejecutar el programa
 1 Desgarge el zip
 ~~~
 2 Buscar el archivo "Octree.pro"
