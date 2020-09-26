@@ -10,7 +10,7 @@ class OctTree {
 private:
 
     bool parar(){
-        if(data.size() >= 100){
+        if(data.size() > 3){
             return true;
         }
         return false;
