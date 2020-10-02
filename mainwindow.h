@@ -29,10 +29,14 @@ public:
 
     bool pointIN(Point a);
     float zoomScale;
+    void printQT(OctTree **quad);
 
     OctTree *qTree ;// instancia del arbol
     vector<Point> pointsW;
     vector<Point*> pSelec;
+
+    vector<Point> linesA;
+    vector<Point> linesB;
 
 
 protected:

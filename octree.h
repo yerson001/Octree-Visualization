@@ -5,17 +5,8 @@
 #include <vector>
 #include <QtDebug>
 using namespace std;
-class OctTree {
-
-private:
-
-    bool parar(){
-        if(data.size() > 3){
-            return true;
-        }
-        return false;
-
-    }
+class OctTree
+{
 public:
     OctTree(){
 
@@ -28,11 +19,20 @@ public:
         dimMin = min;
         leaf = true;
     }
-    //****datos*******
-    bool leaf;
-    Point dimMax;
-    Point dimMin;
-    vector<Point*> data;
+    ~OctTree(){
+        for(int i = 0;i<data.size();i++)
+            delete data[i];
+        if(northWestF){
+            delete northWestF;
+            delete southWestF;
+            delete northEastF;
+            delete southEastF;
+            delete northWestB;
+            delete southWestB;
+            delete northEastB;
+            delete southEastB;
+        }
+    }
 
     OctTree *northWestF;
     OctTree *southWestF;
@@ -42,11 +42,10 @@ public:
     OctTree *southWestB;
     OctTree *northEastB;
     OctTree *southEastB;
-    //*******************
 
-    bool find(Point *pt, OctTree **pOT ){
+    bool find(Point *pt, OctTree **pQT ){
         if(leaf){
-            *pOT = this;
+            *pQT = this;
             for(int i=0;i<data.size();i++){
 
                 if(data[i]->x == pt->x && data[i]->y == pt->y && data[i]->z == pt->z){
@@ -55,10 +54,10 @@ public:
             }
             return false;
         }
-        return FindOctan(pt)->find(pt,pOT);
+        return ubic(pt)->find(pt,pQT);
     }
 
-    OctTree* FindOctan(Point *p){
+    OctTree* ubic(Point *p){
         float midX = (dimMax.x + dimMin.x)/2;
         float midY = (dimMax.y + dimMin.y)/2;
         float midZ = (dimMax.z + dimMin.z)/2;
@@ -97,82 +96,63 @@ public:
     }
 
     bool insert(Point *pt) {
-        OctTree *pOT = nullptr;
+        OctTree *pQT = nullptr;
 
-        if(find(pt,&pOT)){
+        if(find(pt,&pQT)){
             return false;
         }
-        if(pOT==nullptr) return false;
-        if( pOT->parar() ) {
-            pOT->leaf = false;
+        if(pQT==nullptr) return false;
+        if( pQT->stopCond() ) {
+            pQT->leaf = false;
 
-            float midX = (pOT->dimMax.x + pOT->dimMin.x)/2;
-            float midY = (pOT->dimMax.y + pOT->dimMin.y)/2;
-            float midZ = (pOT->dimMax.z + pOT->dimMin.z)/2;
+            float midX = (pQT->dimMax.x + pQT->dimMin.x)/2;
+            float midY = (pQT->dimMax.y + pQT->dimMin.y)/2;
+            float midZ = (pQT->dimMax.z + pQT->dimMin.z)/2;
 
-            pOT->northWestF = new OctTree(Point(pOT->dimMin.x,midY,midZ),Point(midX,pOT->dimMax.y,pOT->dimMax.z));
-            pOT->southWestF = new OctTree(Point(pOT->dimMin.x,pOT->dimMin.y,midZ),Point(midX,midY,pOT->dimMax.z));
-            pOT->northEastF = new OctTree(Point(midX,midY,midZ),pOT->dimMax);
-            pOT->southEastF = new OctTree(Point(midX,pOT->dimMin.y,midZ),Point(pOT->dimMax.x,midY,pOT->dimMax.z));
+            pQT->northWestF = new OctTree(Point(pQT->dimMin.x,midY,midZ),Point(midX,pQT->dimMax.y,pQT->dimMax.z));
+            pQT->southWestF = new OctTree(Point(pQT->dimMin.x,pQT->dimMin.y,midZ),Point(midX,midY,pQT->dimMax.z));
+            pQT->northEastF = new OctTree(Point(midX,midY,midZ),pQT->dimMax);
+            pQT->southEastF = new OctTree(Point(midX,pQT->dimMin.y,midZ),Point(pQT->dimMax.x,midY,pQT->dimMax.z));
 
-            pOT->northWestB = new OctTree(Point(pOT->dimMin.x,midY,pOT->dimMin.z),Point(midX,pOT->dimMax.y,midZ));
-            pOT->southWestB = new OctTree(pOT->dimMin,Point(midX,midY,midZ));
-            pOT->northEastB = new OctTree(Point(midX,midY,pOT->dimMin.z),Point(pOT->dimMax.x,pOT->dimMax.y,midZ));
-            pOT->southEastB = new OctTree(Point(midX,pOT->dimMin.y,pOT->dimMin.z),Point(pOT->dimMax.x,midY,midZ));
+            pQT->northWestB = new OctTree(Point(pQT->dimMin.x,midY,pQT->dimMin.z),Point(midX,pQT->dimMax.y,midZ));
+            pQT->southWestB = new OctTree(pQT->dimMin,Point(midX,midY,midZ));
+            pQT->northEastB = new OctTree(Point(midX,midY,pQT->dimMin.z),Point(pQT->dimMax.x,pQT->dimMax.y,midZ));
+            pQT->southEastB = new OctTree(Point(midX,pQT->dimMin.y,pQT->dimMin.z),Point(pQT->dimMax.x,midY,midZ));
 
 
-            for(int i = 0;i<int(pOT->data.size());i++){
-                (pOT->FindOctan(pOT->data[i]))->insert(pOT->data[i]);
-                //(FindOctan(data[i])->data).push_back(data[i]);
+            for(int i = 0;i<int(pQT->data.size());i++){
+                (pQT->ubic(pQT->data[i]))->insert(pQT->data[i]);
+                //(ubic(data[i])->data).push_back(data[i]);
             }
-            (pOT->FindOctan(pt))->insert(pt);
+            (pQT->ubic(pt))->insert(pt);
 
-            (pOT->data).clear();
+            (pQT->data).clear();
 
         }else{
-            (pOT->data).push_back(pt);
+            (pQT->data).push_back(pt);
         }
 
 
         return true;
     }
 
-    void printOT(){
+    void printQ(){
         qDebug() << data.size() << " tamanio";
     }
-     void PriP(Point *pt){
-        cout<<"punto : ("<<pt->x<<", "<<pt->y<<", "<<pt->z<<" )"<<endl;
-    } 
-    
-    void eliminar(Point *pt) {
-        Octree *pOT = nullptr;
-        if(find(pt,&pOT)) { 
-         cout<<">>>>>>>>>> lo encontramos para eliminar"<<endl;
-        for(int i = 0;i<int(pOT->data.size());i++){
-            if( pOT->data[i]->x == pt->x and pOT->data[i]->y == pt->y and pOT->data[i]->z == pt->z){
-                cout<<"( "<<pOT->data[i]->x<<", "<<pOT->data[i]->y<<", "<<pOT->data[i]->z<<")"<<endl;
-                pOT->data[i] = new Point();// lo convertimos en un punto vacio
-            }
-        }
-         
-        }else {
-          cout<<"no lo encontro para eliminar"<<endl;
-        }
-    }
 
-    ~OctTree(){
-        for(int i = 0;i<data.size();i++)
-            delete data[i];
-        if(northWestF){
-            delete northWestF;
-            delete southWestF;
-            delete northEastF;
-            delete southEastF;
-            delete northWestB;
-            delete southWestB;
-            delete northEastB;
-            delete southEastB;
+    bool leaf;
+    Point dimMax;
+    Point dimMin;
+    vector<Point*> data;
+
+private:
+
+    bool stopCond(){
+        if(data.size() >= 100){
+            return true;
         }
+        return false;
+
     }
 };
 

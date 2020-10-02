@@ -99,6 +99,9 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
 
     pointsW.push_back(Point(x_p*2,y_p*-2));
     qTree->insert(new Point(x_p*2,y_p*-2));
+    linesA.clear();
+    linesB.clear();
+    printQT(&qTree);
     update();
 
 }
@@ -150,6 +153,15 @@ void MainWindow::paintGL() {
     glEnd();
     glFlush();
 
+    glBegin(GL_LINES);
+    glColor3d(255,0,0);
+       //qDebug() <<" gh "<<linesA.size() ;
+    for(int i=0;i<int(linesA.size());i++){
+           glVertex3d(linesA[i].x,linesA[i].y,linesA[i].z);
+           glVertex3d(linesB[i].x,linesB[i].y,linesB[i].z);
+       }
+       glEnd();
+       glFlush();
 
 }
 
@@ -163,3 +175,108 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 
 }
 
+void MainWindow::printQT(OctTree **quad)
+{
+
+
+    if(!((*quad)->leaf)){
+
+        float midX = ((*quad)->dimMax.x + (*quad)->dimMin.x)/2;
+        float midY = ((*quad)->dimMax.y + (*quad)->dimMin.y)/2;
+        float midZ = ((*quad)->dimMax.z + (*quad)->dimMin.z)/2;
+
+        linesA.push_back(Point((*quad)->dimMin.x,midY,midZ));
+        linesB.push_back(Point((*quad)->dimMax.x,midY,midZ));
+
+        linesA.push_back(Point(midX,midY,(*quad)->dimMin.z));
+        linesB.push_back(Point(midX,midY,(*quad)->dimMax.z));
+
+        linesA.push_back(Point(midX,(*quad)->dimMin.y,midZ));
+        linesB.push_back(Point(midX,(*quad)->dimMax.y,midZ));
+
+        linesA.push_back(Point((*quad)->dimMin.x,midY,(*quad)->dimMax.z));
+        linesB.push_back(Point((*quad)->dimMax.x,midY,(*quad)->dimMax.z));
+
+        linesA.push_back(Point(midX,(*quad)->dimMin.y,(*quad)->dimMax.z));
+        linesB.push_back(Point(midX,(*quad)->dimMax.y,(*quad)->dimMax.z));
+
+
+        linesA.push_back(Point((*quad)->dimMin.x,midY,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMax.x,midY,(*quad)->dimMin.z));
+
+        linesA.push_back(Point(midX,(*quad)->dimMin.y,(*quad)->dimMin.z));
+        linesB.push_back(Point(midX,(*quad)->dimMax.y,(*quad)->dimMin.z));
+
+        linesA.push_back(Point((*quad)->dimMin.x,midY,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMin.x,midY,(*quad)->dimMax.z));
+
+        linesA.push_back(Point((*quad)->dimMax.x,midY,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMax.x,midY,(*quad)->dimMax.z));
+
+
+        linesA.push_back(Point(midX,(*quad)->dimMax.y,(*quad)->dimMin.z));
+        linesB.push_back(Point(midX,(*quad)->dimMax.y,(*quad)->dimMax.z));
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,(*quad)->dimMax.z));
+        linesA.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,(*quad)->dimMax.z));
+
+        linesA.push_back(Point(midX,(*quad)->dimMin.y,(*quad)->dimMin.z));
+        linesB.push_back(Point(midX,(*quad)->dimMin.y,(*quad)->dimMax.z));
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMin.y,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMin.x,(*quad)->dimMin.y,(*quad)->dimMax.z));
+        linesA.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,(*quad)->dimMax.z));
+
+
+        linesA.push_back(Point(midX,(*quad)->dimMax.y,(*quad)->dimMin.z));
+        linesB.push_back(Point(midX,(*quad)->dimMax.y,(*quad)->dimMax.z));
+
+        linesA.push_back((*quad)->dimMin);
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,(*quad)->dimMin.z));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,(*quad)->dimMin.z));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,midZ));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,midZ));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,(*quad)->dimMax.z));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,(*quad)->dimMax.z));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMin.y,midZ));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,midZ));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMin.y,(*quad)->dimMax.z));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,(*quad)->dimMax.z));
+
+        linesA.push_back((*quad)->dimMin);
+        linesB.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,(*quad)->dimMin.z));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMin.y,midZ));
+        linesB.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,midZ));
+
+        linesA.push_back(Point((*quad)->dimMin.x,(*quad)->dimMin.y,(*quad)->dimMax.z));
+        linesB.push_back(Point((*quad)->dimMin.x,(*quad)->dimMax.y,(*quad)->dimMax.z));
+
+        linesA.push_back((*quad)->dimMax);
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,(*quad)->dimMax.z));
+
+
+        linesA.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,midZ));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,midZ));
+        linesA.push_back(Point((*quad)->dimMax.x,(*quad)->dimMax.y,(*quad)->dimMin.z));
+        linesB.push_back(Point((*quad)->dimMax.x,(*quad)->dimMin.y,(*quad)->dimMin.z));
+
+
+            printQT(&((*quad)->northEastB));
+            printQT(&((*quad)->southEastB));
+            printQT(&((*quad)->northWestB));
+            printQT(&((*quad)->southWestB));
+            printQT(&((*quad)->northEastF));
+            printQT(&((*quad)->southEastF));
+            printQT(&((*quad)->northWestF));
+            printQT(&((*quad)->southWestF));
+
+    }
+}

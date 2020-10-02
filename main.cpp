@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     QVector<float> puntos;
 
     //**************seleccina la ruta del proyecto del archivo obj
-    QString mFilename = "E:/QT/OcTree/archivo/denber.txt";
+    QString mFilename = "E:/QT/OcTree/archivo/dino.txt";
 
 
     ReadFile(mFilename,puntos);
